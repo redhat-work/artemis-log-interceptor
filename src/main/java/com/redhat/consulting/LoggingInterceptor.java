@@ -27,7 +27,7 @@ public class LoggingInterceptor implements Interceptor {
 	         MessagePacket realPacket = (MessagePacket) packet;
 	         Message msg = realPacket.getMessage();
 	         
-	         String logMessage = String.format("ENTRADA: {\"message-id\":\"%d\", \"correlation-id\":\"%d\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
+	         String logMessage = String.format("ENTRADA: {\"message-id\":\"%d\", \"correlation-id\":\"%s\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
 	        		 							, msg.getMessageID()
 	        		 							, msg.getStringProperty("JMSCorrelationID")
 	        		 							, DATE_FORMAT.format(new Date(msg.getTimestamp()))
