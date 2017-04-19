@@ -36,19 +36,6 @@ public class LoggingInterceptor implements Interceptor {
 	         log.info( logMessage );
 	      }
 		
-		// ServerMessage - JMSSeverMessage ( ServerJMSMEssage - core-client - java 
-		
-		
-		// Escalation - Feature para interceptacao de mensagem de entrada em saida do broker em todos os protocolos - como se fosse o broker plugin
-		
-		// mapMessageUtil.
-		//textMessageUtil
-		
-		// -- interceptor so para Core - amqp e
-		
-		// Service loader - JDK
-		// Justin betran
-		// Esse cara é gente boa, entrou um conf para ajudar
 		
 		return true;
 	}
