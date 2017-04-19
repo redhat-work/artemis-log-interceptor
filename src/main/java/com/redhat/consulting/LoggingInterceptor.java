@@ -9,7 +9,6 @@ import org.apache.activemq.artemis.api.core.Interceptor;
 import org.apache.activemq.artemis.api.core.Message;
 import org.apache.activemq.artemis.core.protocol.core.Packet;
 import org.apache.activemq.artemis.core.protocol.core.impl.wireformat.SessionSendMessage;
-import org.apache.activemq.artemis.core.protocol.core.impl.wireformat.SessionReceiveMessage;
 import org.apache.activemq.artemis.reader.TextMessageUtil;
 import org.apache.activemq.artemis.spi.core.protocol.RemotingConnection;
 import org.jboss.logging.Logger;
@@ -27,8 +26,11 @@ public class LoggingInterceptor implements Interceptor {
 	         MessagePacket realPacket = (MessagePacket) packet;
 	         Message msg = realPacket.getMessage();
 	         
-	         String logMessage = String.format("ENTRADA: {\"message-id\":\"%d\", \"correlation-id\":\"%s\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
-	        		 							, msg.getMessageID()
+			 String inOut = (packet instanceof SessionSendMessage) ? "ENTRADA" : "SAIDA";
+			 
+	         String logMessage = String.format("%s: {\"message-id\":\"%d\", \"correlation-id\":\"%s\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
+	        		 							, inOut
+												, msg.getMessageID()
 	        		 							, msg.getStringProperty("JMSCorrelationID")
 	        		 							, DATE_FORMAT.format(new Date(msg.getTimestamp()))
 	        		 							,  TextMessageUtil.readBodyText( msg.getBodyBuffer())
