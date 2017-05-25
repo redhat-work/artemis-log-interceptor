@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.apache.activemq.artemis.api.core.ActiveMQException;
 import org.apache.activemq.artemis.api.core.Interceptor;
-import org.apache.activemq.artemis.api.core.Message;
+import org.apache.activemq.artemis.api.core.ICoreMessage;
 import org.apache.activemq.artemis.core.protocol.core.Packet;
 import org.apache.activemq.artemis.core.protocol.core.impl.wireformat.SessionSendMessage;
 import org.apache.activemq.artemis.reader.TextMessageUtil;
@@ -20,26 +20,31 @@ public class LoggingInterceptor implements Interceptor {
 		
 	public boolean intercept(Packet packet, RemotingConnection connection) throws ActiveMQException {
 		
+		try{
 		
-		if (packet instanceof MessagePacket) {
-			
-	         MessagePacket realPacket = (MessagePacket) packet;
-	         Message msg = realPacket.getMessage();
-	         
-			 String inOut = (packet instanceof SessionSendMessage) ? "ENTRADA" : "SAIDA";
-			 
-	         String logMessage = String.format("%s: {\"message-id\":\"%d\", \"correlation-id\":\"%s\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
-	        		 							, inOut
-												, msg.getMessageID()
-	        		 							, msg.getStringProperty("JMSCorrelationID")
-	        		 							, DATE_FORMAT.format(new Date(msg.getTimestamp()))
-	        		 							,  TextMessageUtil.readBodyText( msg.getBodyBuffer())
-	        		 							);
-	         log.info( logMessage );
-	      }
-		
-		
-		return true;
+			if (packet instanceof MessagePacket) {
+				
+				MessagePacket realPacket = (MessagePacket) packet;
+				ICoreMessage message = realPacket.getMessage();
+				
+				String inOut = (packet instanceof SessionSendMessage) ? "ENTRADA" : "SAIDA";
+								
+
+				String logMessage = String.format("%s: {\"message-id\":\"%d\", \"correlation-id\":\"%s\", \"timestamp\":\"%s\", \"payload\":\"%s\"}"
+								, inOut
+								, message.getMessageID()
+								, message.getStringProperty("JMSCorrelationID")
+								, DATE_FORMAT.format(new Date(message.getTimestamp()))
+								, TextMessageUtil.readBodyText( message.getBodyBuffer())
+
+							);
+				log.info( logMessage );
+				
+			}
+			return true;
+		}catch(java.lang.IndexOutOfBoundsException ex){
+			return true;
+		}
 	}
 
 }
